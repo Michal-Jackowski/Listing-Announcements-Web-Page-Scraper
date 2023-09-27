@@ -1,4 +1,4 @@
-# Listing Announcements Scraper
+# Listing Announcements Web Page Scraper
 
 ![Made with Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Made with Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 
@@ -14,7 +14,7 @@
 
 ### Schedule
 - [ ] Scrap full data from Telegram
-- [ ] Save data to a file (Data is incomplete)
+- [ ] Save data to a file
 - [ ] Segregate data
 - [ ] Analyze the data
 - [ ] Visualize the data
