@@ -13,7 +13,7 @@
   - Store API keys secretly
 
 ### Schedule
-- [ ] Scrap full data from Telegram
+- [ ] Scrap full data from Web Page
 - [ ] Save data to a file
 - [ ] Segregate data
 - [ ] Analyze the data

@@ -1,22 +1,20 @@
+# Data on the web page is 5 minutes delayed. Real time data is available for small closed circle of people. I will try to scrape historical data using selenium. BeautifulSoup can't
+# handle dynamic web pages.
+
 import datetime
 import pandas as pd
 import path
+from bs4 import BeautifulSoup
+import requests
+import selenium
 
-df = pd.DataFrame()
+def save_logs_to_a_file(path, text):
+    f = open(path, "a")
+    f.write(text)
+    f.close()
 
-#data = {"date" : x, "text" : y,}
-#temp_df = pd.DataFrame(data, index=[1])
-#df = df._append(temp_df)
-                
-#df['date'] = df['date'].dt.tz_localize(None)
-#writer = pd.ExcelWriter(path.scraped_data_from_telegram.format(datetime.date.today()), engine='xlsxwriter')
-#df.to_excel(writer, sheet_name="MySheet", index=False)
+url = "https://www.binance.com/en/support/announcement/new-cryptocurrency-listing?c=48&navId=48"
+html = requests.get(url)
 
-#workbook = writer.book
-#worksheet = writer.sheets['MySheet']
-
-#for i, col in enumerate(df.columns):
-    #width = max(df[col].apply(lambda x: len(str(x))).max(), len(col))
-    #worksheet.set_column(i, i, width)
-
-#writer._save()
+s = BeautifulSoup(html.text, "lxml")
+save_logs_to_a_file(path.scraped_data_from_webpage, str(html.content))
