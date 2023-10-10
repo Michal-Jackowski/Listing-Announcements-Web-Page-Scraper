@@ -9,12 +9,12 @@
   - No UI just simple console app
   - Build in Python
   - A lot of backtesting
-  - Save data to a txt .xlsx file
+  - Save data to a .xlsx file
   - Store API keys secretly
 
 ### Schedule
-- [ ] Scrap full data from Web Page
-- [ ] Save data to a file
+- [x] Scrap full historical data from Web Page
+- [x] Save data to a .xlsx file
 - [ ] Segregate data
 - [ ] Analyze the data
 - [ ] Visualize the data
