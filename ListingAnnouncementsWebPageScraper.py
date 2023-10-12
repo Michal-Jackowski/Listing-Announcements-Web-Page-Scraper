@@ -1,8 +1,6 @@
 # Data on the web page is 5 minutes delayed. Real time data is available for small closed circle of people. I will try to scrape historical data using Selenium.
 
-# Add function to append xlsx file with new articles when there will be something new
 # Filter data (text + date) => Listing Spot, Listing Futures
-# Save all data to one file => xlsx file
 # Save all results to one file => pdf file
 
 from xml.dom.pulldom import END_ELEMENT
@@ -20,6 +18,7 @@ from bs4 import BeautifulSoup
 import time
 from lxml import etree
 import datetime
+import os.path
 
 def save_logs_to_a_file(path, text):
     f = open(path, "a", encoding="utf-8")
@@ -46,7 +45,38 @@ def select_page_number(page_number):
         except:
             pass
 
+def check_if_file_exists(file_path):
+    if(os.path.isfile(file_path)):
+        data = pd.read_excel(file_path)
+        print("File exists.")
+        return True
+    else:
+        print("File doesn't exists.")
+        return True
+
+def check_if_file_is_empty(file_path):
+    file_data = pd.read_excel(file_path)
+    return file_data.empty
+
 df = pd.DataFrame()
+df2 = pd.DataFrame()
+update_data = False
+if(check_if_file_exists(path.scraped_data_from_webpage_excel)):
+    file_data_empty = check_if_file_is_empty(path.scraped_data_from_webpage_excel)
+    if (file_data_empty == False):
+        update_data = True
+        file_data = pd.read_excel(path.scraped_data_from_webpage_excel)
+        df = file_data
+        newest_row_date = file_data['Date'].head(1).to_list()
+        newest_row_aricle_header = file_data['Article Header'].head(1).to_list()
+        print("Should update data.")
+
+def listToString(s):
+    str1 = ""
+    for ele in s:
+        str1 += ele
+    return str1
+
 chrome_driver_PATH = "C:/Program Files (x86)/chromedriver.exe"
 URL = "https://www.binance.com/en/support/announcement/new-cryptocurrency-listing?c=48&navId=48"
 
@@ -64,7 +94,10 @@ number_of_pages = dom.xpath("/html/body/div[3]/div/div/main/div[2]/div[2]/div[2]
 driver.execute_script("window.scrollTo(0, 0)")
 list_index_out_of_range = False
 
+update_complete = False
 for y in range(1, (int(number_of_pages[0]) + 1)):
+    if (update_complete):
+        break
     if y != 1:
         time.sleep(1)
         scroll_page_down()
@@ -96,9 +129,24 @@ for y in range(1, (int(number_of_pages[0]) + 1)):
                 dom = etree.HTML(str(soup))
                 article_header = dom.xpath("/html/body/div[3]/div/div/main/div/div[2]/div/div[2]/div/h1//text()")
                 date = dom.xpath("/html/body/div[3]/div/div/main/div/div[2]/div/div[2]/div/div[2]//text()")
-                data = {"Date" : str(date[0]), "Article Header" : str(article_header[0])}
-                temp_df = pd.DataFrame(data, index=[1])
-                df = df._append(temp_df)
+                if (update_data == False):
+                    data = {"Date" : str(date[0]), "Article Header" : str(article_header[0])}
+                    temp_df = pd.DataFrame(data, index=[1])
+                    df = df._append(temp_df)
+                else:
+                    if ((newest_row_date[0]) != (listToString(date[0]))):
+                        if ((newest_row_aricle_header[0]) != listToString(article_header[0])):
+                            print((newest_row_aricle_header[0]) + " != " + listToString(article_header[0]))
+                            print((newest_row_date[0]) + " != " + (listToString(date[0])))
+                            data2 = {"Date" : str(date[0]), "Article Header" : str(article_header[0])}
+                            date_temp = pd.DataFrame(data2, index=[1])
+                            df2 = df2._append(date_temp)
+                            found_new_articles = True
+                            print("Adding New Data.")
+                    else:
+                        if ((newest_row_aricle_header[0]) == listToString(article_header[0])):
+                            update_complete = True
+                            break
                 time.sleep(1.25)
             if y == 1:
                 driver.back()
@@ -119,14 +167,20 @@ for y in range(1, (int(number_of_pages[0]) + 1)):
     if int(number_of_pages[0]) == y:
         break
 
+if(found_new_articles):
+    print("New articles found.")
+    df3 = pd.concat([df2, df], ignore_index=True)
+else:
+    print("New articles not found.")
+
 writer = pd.ExcelWriter(path.scraped_data_from_webpage_excel.format(datetime.date.today()), engine='xlsxwriter')
-df.to_excel(writer, sheet_name="MySheet", index=False)
+df3.to_excel(writer, sheet_name="MySheet", index=False)
 
 workbook = writer.book
 worksheet = writer.sheets['MySheet']
 
-for i, col in enumerate(df.columns):
-    width = max(df[col].apply(lambda x: len(str(x))).max(), len(col))
+for i, col in enumerate(df3.columns):
+    width = max(df3[col].apply(lambda x: len(str(x))).max(), len(col))
     worksheet.set_column(i, i, width)
 
 writer._save()
