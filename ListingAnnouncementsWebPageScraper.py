@@ -47,7 +47,6 @@ def select_page_number(page_number):
 
 def check_if_file_exists(file_path):
     if(os.path.isfile(file_path)):
-        data = pd.read_excel(file_path)
         print("File exists.")
         return True
     else:
@@ -60,6 +59,7 @@ def check_if_file_is_empty(file_path):
 
 df = pd.DataFrame()
 df2 = pd.DataFrame()
+df3 = pd.DataFrame()
 update_data = False
 if(check_if_file_exists(path.scraped_data_from_webpage_excel)):
     file_data_empty = check_if_file_is_empty(path.scraped_data_from_webpage_excel)
@@ -69,7 +69,6 @@ if(check_if_file_exists(path.scraped_data_from_webpage_excel)):
         df = file_data
         newest_row_date = file_data['Date'].head(1).to_list()
         newest_row_aricle_header = file_data['Article Header'].head(1).to_list()
-        print("Should update data.")
 
 def listToString(s):
     str1 = ""
@@ -94,6 +93,7 @@ number_of_pages = dom.xpath("/html/body/div[3]/div/div/main/div[2]/div[2]/div[2]
 driver.execute_script("window.scrollTo(0, 0)")
 list_index_out_of_range = False
 
+found_new_articles = False
 update_complete = False
 for y in range(1, (int(number_of_pages[0]) + 1)):
     if (update_complete):
@@ -173,16 +173,20 @@ if(found_new_articles):
 else:
     print("New articles not found.")
 
-writer = pd.ExcelWriter(path.scraped_data_from_webpage_excel.format(datetime.date.today()), engine='xlsxwriter')
-df3.to_excel(writer, sheet_name="MySheet", index=False)
+if(df3.empty):
+    print("Data is up to date.")
+    driver.close()    
+else:
+    writer = pd.ExcelWriter(path.scraped_data_from_webpage_excel.format(datetime.date.today()), engine='xlsxwriter')
+    df3.to_excel(writer, sheet_name="MySheet", index=False)
 
-workbook = writer.book
-worksheet = writer.sheets['MySheet']
+    workbook = writer.book
+    worksheet = writer.sheets['MySheet']
 
-for i, col in enumerate(df3.columns):
-    width = max(df3[col].apply(lambda x: len(str(x))).max(), len(col))
-    worksheet.set_column(i, i, width)
+    for i, col in enumerate(df3.columns):
+        width = max(df3[col].apply(lambda x: len(str(x))).max(), len(col))
+        worksheet.set_column(i, i, width)
 
-writer._save()
-driver.close()
-print("Saving to the xlsx file was successful.")
+    writer._save()
+    driver.close()
+    print("Saving to the xlsx file was successful.")
