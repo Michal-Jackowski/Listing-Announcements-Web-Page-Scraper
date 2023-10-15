@@ -11,6 +11,7 @@ df3 = pd.DataFrame()
 data = pd.DataFrame()
 df_spot = pd.DataFrame()
 df_futures = pd.DataFrame()
+df_others = pd.DataFrame()
 df = pd.read_excel(path.scraped_data_from_webpage_excel)
 
 if(df3.empty):
@@ -33,27 +34,27 @@ for x in range(len(data)):
     # FUTURES LISTINGS
     elif re.search("Binance Futures Will Launch", text, re.IGNORECASE):
         df_futures = df_futures._append(temp_df)
-    if re.search("Binance Futures Will List", text, re.IGNORECASE):
+    elif re.search("Binance Futures Will List", text, re.IGNORECASE):
         df_futures = df_futures._append(temp_df)
+    else:
+        df_others = df_others._append(temp_df)
 
 writer = pd.ExcelWriter(path.filtered_data_from_webpage_spot_excel.format(datetime.date.today()), engine='xlsxwriter')
 writer2 = pd.ExcelWriter(path.filtered_data_from_webpage_futures_excel.format(datetime.date.today()), engine='xlsxwriter')
+writer3 = pd.ExcelWriter(path.filtered_data_from_webpage_others_excel.format(datetime.date.today()), engine='xlsxwriter')
 df_spot.to_excel(writer, sheet_name="MySheet", index=False)
 df_futures.to_excel(writer2, sheet_name="MySheet", index=False)
-
-workbook = writer.book
+df_others.to_excel(writer3, sheet_name="MySheet", index=False)
 worksheet = writer.sheets['MySheet']
-workbook2 = writer2.book
 worksheet2 = writer2.sheets['MySheet']
+worksheet3 = writer3.sheets['MySheet']
 
-for i, col in enumerate(df_spot.columns):
-    width = max(df_spot[col].apply(lambda x: len(str(x))).max(), len(col))
-    worksheet.set_column(i, i, width)
-
-for i, col in enumerate(df_futures.columns):
-    width = max(df_futures[col].apply(lambda x: len(str(x))).max(), len(col))
-    worksheet2.set_column(i, i, width)
-
-writer._save()
-writer2._save()
+df_list = [df_spot, df_futures, df_others]
+worksheets = [worksheet, worksheet2, worksheet3]
+writers = [writer, writer2, writer3]
+for df, ws, wr in zip(df_list, worksheets, writers):
+    for i, col in enumerate(df.columns):
+        width = max(df[col].apply(lambda x: len(str(x))).max(), len(col))
+        ws.set_column(i, i, width)
+    wr._save()
 print("Saving to the xlsx file was successful.")

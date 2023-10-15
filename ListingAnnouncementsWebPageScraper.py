@@ -180,7 +180,6 @@ else:
     writer = pd.ExcelWriter(path.scraped_data_from_webpage_excel.format(datetime.date.today()), engine='xlsxwriter')
     df3.to_excel(writer, sheet_name="MySheet", index=False)
 
-    workbook = writer.book
     worksheet = writer.sheets['MySheet']
 
     for i, col in enumerate(df3.columns):

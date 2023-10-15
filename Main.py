@@ -1,3 +1,4 @@
 import ListingAnnouncementsWebPageScraper
 import ListingAnnouncementsWebPageFilter
+import ListingAnnouncementsWebPageProbabilityCalculator
 import ListingAnnouncementsWebPageReportGenerator
