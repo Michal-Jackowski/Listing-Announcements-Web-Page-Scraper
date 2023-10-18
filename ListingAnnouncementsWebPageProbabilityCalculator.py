@@ -3,6 +3,7 @@ import pandas as pd
 import path
 from datetime import datetime
 import calendar
+import ListingAnnouncementsWebPageProbabilityCalculator
 
 def check_hour_probability(data):    
     number_of_appearances_a_given_day = {"Monday": {"00:00": 0, "01:00": 0, "02:00": 0, "03:00": 0, "04:00": 0, "05:00": 0, "06:00": 0, "07:00": 0, "08:00": 0, "09:00": 0, "10:00": 0, "11:00": 0, "12:00": 0, "13:00": 0, "14:00": 0, "15:00": 0, "16:00": 0, "17:00": 0, "18:00": 0, "19:00": 0, "20:00": 0, "21:00": 0, "22:00": 0, "23:00": 0},
@@ -67,9 +68,13 @@ def check_hour_probability(data):
             number_of_appearances_a_given_day[day_of_week]["23:00"] += 1
     return number_of_appearances_a_given_day
 
+def get_probability_results():
+    df_spot_probability = check_hour_probability(df_spot)
+    df_futures_probability = check_hour_probability(df_futures)
+    df_others_probability = check_hour_probability(df_others)
+    probablity_list = [df_spot_probability, df_futures_probability, df_others_probability]
+    return probablity_list
+
 df_spot = pd.read_excel(path.filtered_data_from_webpage_spot_excel)
 df_futures = pd.read_excel(path.filtered_data_from_webpage_futures_excel)
 df_others = pd.read_excel(path.filtered_data_from_webpage_others_excel)
-print("df_spot = " + str(check_hour_probability(df_spot)))
-print("df_futures = " + str(check_hour_probability(df_futures)))
-print("df_others = " + str(check_hour_probability(df_others)))
