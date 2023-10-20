@@ -1,8 +1,5 @@
 # Data on the web page is 5 minutes delayed. Real time data is available for small closed circle of people. I will try to scrape historical data using Selenium.
 
-# Filter data (text + date) => Listing Spot, Listing Futures
-# Save all results to one file => pdf file
-
 from xml.dom.pulldom import END_ELEMENT
 import pandas as pd
 import path

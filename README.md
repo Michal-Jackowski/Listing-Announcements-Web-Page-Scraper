@@ -15,7 +15,17 @@
 ### Schedule
 - [x] Scrap full historical data from Web Page
 - [x] Save data to a .xlsx file
-- [ ] Segregate data
-- [ ] Analyze the data
-- [ ] Visualize the data
-- [ ] Backtesting
+- [x] Segregate data
+- [x] Analyze the data
+- [x] Visualize the data
+- [x] Backtesting
+
+Input
+<p align="center">
+  <img width="1920" height="1874" src="https://drive.google.com/uc?export=view&id=1QUjtUKJdeOvmGBm-iTsDknr_AKYMiyCf">
+
+Output
+<p align="center">
+  <img width="1657" height="882" src="https://drive.google.com/uc?export=view&id=1LTFI6-m7XbRI8-NLqggVAGTgypr0-dmr">
+                                     
+                                     

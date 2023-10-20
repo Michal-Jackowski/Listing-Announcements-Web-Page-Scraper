@@ -2,7 +2,6 @@ import re
 import pandas as pd
 import path
 import datetime
-#from ListingAnnouncementsWebPageScraper import df, df3
 
 print("Filter data logic here.")
 
