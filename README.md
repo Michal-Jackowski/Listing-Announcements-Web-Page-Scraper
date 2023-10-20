@@ -22,10 +22,10 @@
 
 Input
 <p align="center">
-  <img width="1920" height="1874" src="https://drive.google.com/uc?export=view&id=1QUjtUKJdeOvmGBm-iTsDknr_AKYMiyCf">
+  <img width="729" height="711.53" src="https://drive.google.com/uc?export=view&id=1QUjtUKJdeOvmGBm-iTsDknr_AKYMiyCf">
 
 Output
 <p align="center">
-  <img width="1657" height="882" src="https://drive.google.com/uc?export=view&id=1LTFI6-m7XbRI8-NLqggVAGTgypr0-dmr">
+  <img width="729" height="388.04" src="https://drive.google.com/uc?export=view&id=1LTFI6-m7XbRI8-NLqggVAGTgypr0-dmr">                                      
                                      
                                      
